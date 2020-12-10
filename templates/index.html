@@ -31,18 +31,22 @@
     <div class="container-fluid">
 
       <table class="table table-hover">
-        <tr>
-            <th>序号</th>
-            <th>股票代码</th>
-            <th>股票简称</th>
-            <th>涨跌幅</th>
-            <th>换手率</th>
-            <th>最新价(元)</th>
-            <th>前期高点</th>
-            <th>前期高点日期</th>
-            <th>添加自选</th>
-        </tr>
-        {%content%}
+          <thead>
+            <tr>
+                <th>序号</th>
+                <th>股票代码</th>
+                <th>股票简称</th>
+                <th>涨跌幅</th>
+                <th>换手率</th>
+                <th>最新价(元)</th>
+                <th>前期高点</th>
+                <th>前期高点日期</th>
+                <th>添加自选</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%content%}
+          </tbody>
       </table>
     </div>
   </div>

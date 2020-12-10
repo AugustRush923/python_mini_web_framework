@@ -84,16 +84,16 @@ class HTTPServer:
 
 
 def main():
-    # # 判断命令行参数是否为2
-    # if len(sys.argv) != 2:
-    #     print('请以类似格式运行 python mini_web.py 9000')
-    #     return
-    # # 判断字符串是否是由数字组成
-    # if not sys.argv[1].isdigit():
-    #     print('请以类似格式运行 python mini_web.py 9000')
-    #     return
-    # # 获取终端命令行参数
-    # port = int(sys.argv[1])
+    # 判断命令行参数是否为2
+    if len(sys.argv) != 2:
+        print('请以类似格式运行 python mini_web.py 9000')
+        return
+    # 判断字符串是否是由数字组成
+    if not sys.argv[1].isdigit():
+        print('请以类似格式运行 python mini_web.py 9000')
+        return
+    # 获取终端命令行参数
+    port = int(sys.argv[1])
     # 创建web server对象
     server = HTTPServer(9000)
     # 启动web server对象
