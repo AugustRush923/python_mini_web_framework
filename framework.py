@@ -1,4 +1,3 @@
-import time
 from pymysql import connect
 
 route_list = [
