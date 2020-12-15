@@ -95,7 +95,7 @@ def main():
     # 获取终端命令行参数
     port = int(sys.argv[1])
     # 创建web server对象
-    server = HTTPServer(9000)
+    server = HTTPServer(port)
     # 启动web server对象
     server.run()
 
