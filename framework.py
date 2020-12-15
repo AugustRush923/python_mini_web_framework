@@ -141,9 +141,7 @@ def center_data():
             data['备注信息'] = item[6]
             all_data.append(data)
     # print(data)
-    print(all_data)
     jsonArr = json.dumps(all_data, ensure_ascii=False)
-    print(jsonArr)
     return jsonArr
 
 

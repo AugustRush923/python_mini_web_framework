@@ -20,8 +20,9 @@ class HTTPServer:
         if not recv_data:
             new_socket.close()
             return
+        # 切割字串 找到相应请求资源
         file_path = recv_data.split('\r\n', maxsplit=2)[0].split(' ')[1]
-        print(file_path)
+
         # 如果没跟详细地址，则返回首页
         # if file_path == '/':
         #     file_path = '/index.html'
@@ -45,7 +46,9 @@ class HTTPServer:
             new_socket.close()
             return
 
+        # 静态资源请求处理
         try:
+            print(file_path)
             # 打开文件
             with open('static' + file_path, 'rb') as file:
                 file_data = file.read()
@@ -77,6 +80,7 @@ class HTTPServer:
         while True:
             try:
                 new_socket, ip_port = self.tcp_server.accept()
+                # 开启子线程处理请求
                 threading_task = threading.Thread(target=self.handle_client, args=(new_socket,), daemon=True)
                 threading_task.start()
             except KeyboardInterrupt:
