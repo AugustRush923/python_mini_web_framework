@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>个人中心 - 个人选股系统 V5.87</title>
     <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" src="/js/jquery-1.12.4.js"></script>
 </head>
 <body>
 <div class="navbar navbar-inverse navbar-static-top ">
@@ -33,24 +34,59 @@
 
         <table class="table table-hover">
             <thead>
-                <tr>
-                    <th>股票代码</th>
-                    <th>股票简称</th>
-                    <th>涨跌幅</th>
-                    <th>换手率</th>
-                    <th>最新价(元)</th>
-                    <th>前期高点</th>
-                    <th style="color:red">备注信息</th>
-                    <th>修改备注</th>
-                    <th>del</th>
-                </tr>
+            <tr>
+                <th>股票代码</th>
+                <th>股票简称</th>
+                <th>涨跌幅</th>
+                <th>换手率</th>
+                <th>最新价(元)</th>
+                <th>前期高点</th>
+                <th style="color:red">备注信息</th>
+                <th>修改备注</th>
+                <th>del</th>
+            </tr>
             </thead>
             <tbody>
-                {%content%}
+            {%content%}
             </tbody>
         </table>
     </div>
 </div>
 <script src="/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: 'center_data.html',
+            type: 'GET',
+            dataType: 'json',
+        })
+            .done(function (data) {
+                var $table = $(".table")
+                for (var i = 0; i < data.length; i++) {
+                    var oCenterData = data[i]
+                    var oTr = ' <tr>' +
+                        '<th>' + oCenterData.code + '</th>' +
+                        '<th>' + oCenterData.short + '</th>' +
+                        '<th>' + oCenterData.chg + '</th>' +
+                        '<th>' + oCenterData.turnover + '</th>' +
+                        '<th>' + oCenterData.price + '</th>' +
+                        '<th>' + oCenterData.highs + '</th>' +
+                        '<th>' + oCenterData.note_info + '</th>' +
+                        '<th>' +
+                        '<a type="button" class="btn btn-default btn-xs" href="/update/%s.html">' +
+                        '<span class="glyphicon glyphicon-star" aria-hidden="true"></span> 修改' +
+                        '</a>' +
+                        '</th>' +
+                        '<th> <input type="button" value="删除" id="toDel" name="toDel" systemidvaule="%s"></th>' +
+                        '</tr>'
+                    $table.append(oTr)
+                }
+
+            })
+            .fail(function () {
+                alert('服务器超时，请重试！');
+            });
+    });
+</script>
 </body>
 </html>            

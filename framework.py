@@ -121,28 +121,33 @@ def index():
     return status, response_header, response_body
 
 
+@router('/center_data.html')
 def center_data():
+    status = '200 OK'
+    response_header = [('Server', 'PWS /1.1'), ('Content-Type', 'text/html;charset=utf-8')]
     # 返回Json数据
     with sql_connect(database='stock_db', user='root', password='zhd19980923') as cur:
         cur.execute(
             'select i.code,i.short,i.chg,i.turnover,i.price,i.highs,note_info from focus inner join info i on '
             'focus.info_id = i.id;')
         items = cur.fetchall()
-        data = {}
-        all_data = []
-        for item in items:
-            # print(item)
-            data['股票代码'] = item[0]
-            data['股票简称'] = item[1]
-            data['涨跌幅'] = item[2]
-            data['换手率'] = item[3]
-            data['最新价(元)'] = float(item[4])
-            data['前期高点'] = float(item[5])
-            data['备注信息'] = item[6]
-            all_data.append(data)
-    # print(data)
-    jsonArr = json.dumps(all_data, ensure_ascii=False)
-    return jsonArr
+        # data = {}
+        # all_data = []
+        # for item in items:
+        #     # print(item)
+        #     data['股票代码'] = item[0]
+        #     data['股票简称'] = item[1]
+        #     data['涨跌幅'] = item[2]
+        #     data['换手率'] = item[3]
+        #     data['最新价(元)'] = float(item[4])
+        #     data['前期高点'] = float(item[5])
+        #     data['备注信息'] = item[6]
+        #     all_data.append(data)
+        data = [{"code": item[0], "short": item[1], "chg": item[2], "turnover": item[3], "price": float(item[4]),
+          "highs": float(item[5]),"note_info": item[6]} for item in items]
+    response_body = json.dumps(data, ensure_ascii=False)
+
+    return status, response_header, response_body
 
 
 @router('/center.html')
@@ -153,55 +158,34 @@ def center():
     response_header = [('Server', 'PWS /1.1')]
     with open('templates/center.html', 'r') as file:
         file_data = file.read()
-    items = center_data()
-    items = json.loads(items)
-    data = ''
-    for item in items:
-        data += f'''
-                    <tr>
-                            <th>{item["股票代码"]}</th>
-                            <th>{item["股票简称"]}</th>
-                            <th>{item["涨跌幅"]}</th>
-                            <th>{item["换手率"]}</th>
-                            <th>{item["最新价(元)"]}</th>
-                            <th>{item["前期高点"]}</th>
-                            <th>{item["备注信息"]}</th>
-                            <th>
-                                <a type="button" class="btn btn-default btn-xs" href="/update/%s.html"> 
-                                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span> 修改 
-                                </a>
-                            </th> 
-                            <th> <input type="button" value="删除" id="toDel" name="toDel" systemidvaule="%s"></th>
-                    </tr>
-                    '''
+
     # 从上下文管理器 数据库获取数据
-    """
-    with SqlConnect(database='stock_db', user='root', password='zhd19980923') as cur:
-        cur.execute(
-            'select i.code,i.short,i.chg,i.turnover,i.price,i.highs,note_info from focus inner join info i on '
-            'focus.info_id = i.id;')
-        items = cur.fetchall()
-        data = ''
-        for item in items:
-            # noinspection SpellCheckingInspection
-            data += f'''
-            <tr>
-                    <th>{item[0]}</th>
-                    <th>{item[1]}</th>
-                    <th>{item[2]}</th>
-                    <th>{item[3]}</th>
-                    <th>{item[4]}</th>
-                    <th>{item[5]}</th>
-                    <th>{item[6]}</th>
-                    <th>
-                        <a type="button" class="btn btn-default btn-xs" href="/update/%s.html">
-                            <span class="glyphicon glyphicon-star" aria-hidden="true"></span> 修改
-                        </a>
-                    </th>
-                    <th> <input type="button" value="删除" id="toDel" name="toDel" systemidvaule="%s"></th>
-            </tr>
-            '''
-    """
+    # with SqlConnect(database='stock_db', user='root', password='zhd19980923') as cur:
+    #     cur.execute(
+    #         'select i.code,i.short,i.chg,i.turnover,i.price,i.highs,note_info from focus inner join info i on '
+    #         'focus.info_id = i.id;')
+    #     items = cur.fetchall()
+    #     data = ''
+    #     for item in items:
+    #         # noinspection SpellCheckingInspection
+    #         data += f'''
+    #         <tr>
+    #                 <th>{item[0]}</th>
+    #                 <th>{item[1]}</th>
+    #                 <th>{item[2]}</th>
+    #                 <th>{item[3]}</th>
+    #                 <th>{item[4]}</th>
+    #                 <th>{item[5]}</th>
+    #                 <th>{item[6]}</th>
+    #                 <th>
+    #                     <a type="button" class="btn btn-default btn-xs" href="/update/%s.html">
+    #                         <span class="glyphicon glyphicon-star" aria-hidden="true"></span> 修改
+    #                     </a>
+    #                 </th>
+    #                 <th> <input type="button" value="删除" id="toDel" name="toDel" systemidvaule="%s"></th>
+    #         </tr>
+    #         '''
+
     # 从数据库获取数据
     """
     conn = connect(host='localhost', port=3306, database='stock_db', user='root', password='zhd19980923',
@@ -231,7 +215,7 @@ def center():
     conn.close()
     """
     # 替换数据
-    response_body = file_data.replace('{%content%}', data)
+    response_body = file_data
 
     return status, response_header, response_body
 
